@@ -1,0 +1,11 @@
+(defun bst-elements (bst)
+  (if bst (append 
+           (bst-elements (node-r bst))
+           (cons (node-elt bst) (bst-elements (node-l bst))))
+      nil))
+
+
+(defun bst-elements (bst)
+  (setf elements nil)
+  (bst-traverse #'(lambda (obj) (push obj elements)) bst)
+  elements)
