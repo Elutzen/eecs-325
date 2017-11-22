@@ -1,0 +1,20 @@
+(defun longest-path (start end net)
+  (if (eql start end)
+    (reverse (make-path end net (list start) (list start)))
+    (reverse (make-path end net (list start)))))
+
+(defun make-path (end net path &optional (longest nil))
+  (do ((locs (cdr (assoc (car path) net)) (cdr locs))
+       (long longest (is-longer (add-to-path end net path (car locs)) long)))
+      ((null locs) 
+       long)))
+
+(defun add-to-path (end net path loc)
+  (cond ((eql loc end) (cons loc path))
+        ((member loc path) nil)
+        (t nil (make-path end net (cons loc path)))))
+
+(defun is-longer (new-path old-path)
+  (if (> (length new-path) (length old-path))
+      new-path
+    old-path))
