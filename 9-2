@@ -1,0 +1,9 @@
+(defun make-change (amount &optional (coin-list '(25 10 5 1)))
+   (values-list (make-change-list amount coin-list)))
+
+(defun make-change-list (amount coin-list)
+  (if (null coin-list) 
+      nil 
+    (multiple-value-bind (coins rem)
+        (floor amount (car coin-list))
+      (cons coins (make-change-list rem (cdr coin-list))))))
