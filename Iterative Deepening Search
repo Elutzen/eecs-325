@@ -19,7 +19,7 @@
   (reverse (ids end (list start) net 10)))
 
 
-;;redefined dfs 
+;;redefined dfs THIS ONE WORKS!
 (defun dfs (end path net depth)
   (cond 
    ((eql (car path) end) path)
@@ -28,3 +28,12 @@
          (locs (cdr (assoc (car path) net)) (cdr locs)))
         ((or (null locs) shortest) shortest)))
    (t nil)))
+
+(defun ids (end queue net depth-limit)
+  (do ((depth 1 (1+ depth))
+       (shortest nil (dfs end queue net depth)))
+      ((or (> depth depth-limit) shortest) 
+       shortest)))
+
+(defun shortest-path (start end net)
+  (reverse (ids end (list start) net 10)))
