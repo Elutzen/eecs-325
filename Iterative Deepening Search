@@ -17,3 +17,14 @@
 
 (defun shortest-path (start end net)
   (reverse (ids end (list start) net 10)))
+
+
+;;redefined dfs 
+(defun dfs (end path net depth)
+  (cond 
+   ((eql (car path) end) path)
+   ((> depth 0)
+    (do ((shortest nil (dfs end (cons (car locs) path) net (1- depth)))
+         (locs (cdr (assoc (car path) net)) (cdr locs)))
+        ((or (null locs) shortest) shortest)))
+   (t nil)))
