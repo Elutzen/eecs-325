@@ -13,7 +13,7 @@
   (do ((depth 1 (1+ depth))
        (path nil (dls end queue net depth)))
       (path
-       path)))
+       path))) 
 
 (defun shortest-path (start end net)
   (reverse (ids end (list start) net)))
