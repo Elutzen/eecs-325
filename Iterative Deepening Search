@@ -1,0 +1,19 @@
+(defun dls (end queue net depth)
+  (cond ((eql (car queue) end) queue)
+        ((> depth 0) (add-to-path end queue net (1- depth)))
+        (t nil)))
+
+(defun add-to-path (end queue net depth)
+  (do ((locs (cddr (assoc (car queue) net)) (cdr locs))
+       (next-loc (car (cdr (assoc (car queue) net))) (car locs)))
+      ((null locs)
+    (dls end (append (list next-loc) queue) net depth))))
+
+(defun ids (end queue net)
+  (do ((depth 1 (1+ depth))
+       (path nil (dls end queue net depth)))
+      (path
+       path)))
+
+(defun shortest-path (start end net)
+  (reverse (ids end (list start) net)))
