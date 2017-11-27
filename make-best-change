@@ -1,0 +1,14 @@
+(defun make-change-list (amount coin-list)
+  (if (null coin-list) 
+      nil 
+    (multiple-value-bind (coins rem)
+        (floor amount (car coin-list))
+      (cons coins (make-change-list rem (cdr coin-list))))))
+
+(defun select-fewest-coins (coins1 coins2)
+  (if (< (apply #'+ coins1) (apply #'+ coins2)) coins1 coins2))
+
+
+(defun make-best-change (amount &optional (coin-list '(25 10 5 1)))
+
+(defun create-coin-lists (
