@@ -1,0 +1,18 @@
+(defun max-min (v &key (start 0) (end (length v)) (max nil) (min nil))
+  (if (= start end) 
+      (values max min)
+    (max-min v 
+             :start (1+ start) 
+             :end end 
+             :max (select-max max (elt v start)) 
+             :min (select-min min (elt v start)))))
+  
+(defun select-min (min element)
+  (cond ((null min) element)
+        ((< element min) element)
+        (t min)))
+
+(defun select-max (max element)
+  (cond ((null max) element)
+        ((> element max) element)
+        (t max)))
