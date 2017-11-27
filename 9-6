@@ -1,3 +1,6 @@
+;Does horner's method to solve polynomials
+;ax^3 + bx^2 +cx^1 +d --> x(x(ax+b)+c)+d
+
 (defun horner (value &rest coefs)
   (reduce #'(lambda (coef1 coef2) 
               (+ (* value coef1) coef2)) 
