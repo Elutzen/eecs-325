@@ -1,0 +1,4 @@
+(defun horner (value &rest coefs)
+  (reduce #'(lambda (coef1 coef2) 
+              (+ (* value coef1) coef2)) 
+          coefs))
