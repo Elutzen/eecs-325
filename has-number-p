@@ -1,0 +1,5 @@
+(defun has-number-p (obj)
+  (cond ((atom obj) (numberp obj))
+        ((some #'numberp obj))
+        ((some #'listp obj) (some #'has-number-p (remove-if #'atom obj)))
+        (t nil)))
