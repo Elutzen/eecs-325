@@ -2,5 +2,8 @@
   (loop for number from min below max 
         collect number)
 
-(defun map-range (fn min max)
-  
+
+  (defun map-range (fn start end)
+  (do ((number start (+ number (if (< start end) 1 -1)))
+       (lst nil (cons (funcall fn number) lst)))
+      ((= start end) lst)))
