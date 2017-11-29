@@ -31,3 +31,13 @@
                    number 
                  result)))
       ((= number end) result)))
+
+(defun every-range (fn start end)
+  (do ((number start (+ number (if (< start end) 1 -1)))
+       (result t (and result (funcall fn number))))
+      ((= number end) result)))
+      
+      (defun reduce-range (fn start end &optional (init nil))
+  (do ((number start (+ number (if (< start end) 1 -1)))
+       (result init (funcall fn result number)))
+      ((= number end) result)))
