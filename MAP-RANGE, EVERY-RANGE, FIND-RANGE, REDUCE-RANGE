@@ -23,3 +23,11 @@
   (do ((number start (+ number (if (< start end) 1 -1)
        (lst nil (cons (funcall fn number) lst)))
       ((= number end) (reverse lst))))
+      
+      (defun find-range (fn start end)
+  (do ((number start (+ number (if (< start end) 1 -1)))
+       (result nil 
+               (if (and (funcall fn number) (null result)) 
+                   number 
+                 result)))
+      ((= number end) result)))
