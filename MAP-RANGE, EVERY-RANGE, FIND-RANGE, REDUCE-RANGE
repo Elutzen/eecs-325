@@ -1,0 +1,6 @@
+(defun range (min max)
+  (loop for number from min below max 
+        collect number)
+
+(defun map-range (fn min max)
+  
