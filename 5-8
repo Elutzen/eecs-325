@@ -16,3 +16,15 @@
   (cond ((null max) element)
         ((> element max) element)
         (t max)))
+
+
+;;update version
+
+(defun max-min (v &key (start 0) (end (length v)) (max nil) (min nil))
+  (if (= start end) 
+      (values max min)
+    (max-min v 
+             :start (1+ start) 
+             :end end 
+             :max (max (elt v start) (or max (elt v start)))
+             :min (min (elt v start) (or min (elt v start))))))
