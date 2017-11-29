@@ -16,3 +16,10 @@
         for number = start then (+ number step)
         until (= number end)
         collect (funcall fn number)))
+
+
+;; From here
+(defun map-range (fn start end)
+  (do ((number start (+ number (if (< start end) 1 -1)
+       (lst nil (cons (funcall fn number) lst)))
+      ((= number end) (reverse lst))))
