@@ -1,0 +1,5 @@
+(defun tree-to-list (tree)
+  (cond ((consp tree)
+         (append (tree-to-list(car tree)) (tree-to-list (cdr tree))))
+        ((null tree) nil)
+        (t (list tree))))
