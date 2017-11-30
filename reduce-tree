@@ -3,3 +3,6 @@
          (append (tree-to-list(car tree)) (tree-to-list (cdr tree))))
         ((null tree) nil)
         (t (list tree))))
+
+(defun reduce-tree (fn tree &optional (init nil))
+  (reduce fn (tree-to-list tree) :initial-value init))
