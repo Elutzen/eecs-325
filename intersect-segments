@@ -1,14 +1,17 @@
 (defun intersect-segments (x1 y1 x2 y2 x3 y3 x4 y4)
+  (let* ((s1 (slope x1 y1 x2 y2))
+        (s2 (slope x3 y3 x4 y4))
+        (xin1 (x-intercept x1 y1 s1))
+        (xin2 (x-intercept x3 y3 s2)))
   (cond ((or (no-overlap x1 x2 x3 x4) 
              (no-overlap y1 y2 y3 y4))
          nil)
-        ((is-parallel x1 y1 x2 y2 x3 y3 x4 y4)
+        ((is-colinear xin1 s1 xin2 s2)
          (combine-xy (1d-intersect x1 x2 x3 x4)
                      (1d-intersect y1 y2 y3 y4)))
-        (t 'a)))
-
-(defun is-parallel (x1 y1 x2 y2 x3 y3 x4 y4)
-  (eql (slope x1 y1 x2 y2) (slope x3 y3 x4 y4)))
+        ((same-ends x1 y1 x2 y2 x3 y3 x4 y4) nil) 
+        ((eql s1 s2) nil)
+        (t (intersect-line xin1 s1 xin2 s2)))))
 
 (defun slope (x1 y1 x2 y2)
   (if (= (- x1 x2) 0) 'inf
@@ -31,6 +34,31 @@
 (defun combine-xy (x y)
   (values-list (mapcan #'list x y)))
 
+(defun x-intercept (x y s)
+      (cond ((eql s 'inf) x)
+            ((= 0 y) x)
+            ((= s 0) 'NaN)
+            (t (+ x (/ (- y) s)))))
+
+(defun is-colinear (x1 s1 x2 s2)
+  (and (eql x1 x2) (eql s1 s2)))
+
+(defun intersect-line (x1 s1 x2 s2) 
+  (cond ((eql 'inf s1) (values x1 (+ (* s2 x1) x2)))
+        ((eql 'inf s2) (values x2 (+ (* s1 x2) x1)))
+        (t (values 
+            (/ (- x2 x1) (- s1 s2)) 
+            (+ (* s1 (/ (- x2 x1) (- s1 s2))) x1)))))
+
+(defun same-ends (x1 y1 x2 y2 x3 y3 x4 y4)
+  (cond ((and (= x1 x3) (= y1 y3)) (values x1 y1 x3 y3))
+        ((and (= x1 x4) (= y1 y4)) (values x1 y1 x4 y4))
+        ((and (= x2 x3) (= y2 y3)) (values x2 y2 x3 y3))
+        ((and (= x2 x4) (= y2 y4)) (values x2 y2 x4 y4))
+        (t nil)))
+
+(defun is-point (x1 y1 x2 y2)
+  (and (= x1 x2) (= y1 y2)))
 
 
  
