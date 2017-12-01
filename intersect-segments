@@ -1,21 +1,35 @@
+(defun intersect-segments (x1 y1 x2 y2 x3 y3 x4 y4)
+  (cond ((or (no-overlap x1 x2 x3 x4) 
+             (no-overlap y1 y2 y3 y4))
+         nil)
+        ((is-parallel x1 y1 x2 y2 x3 y3 x4 y4)
+         (combine-xy (1d-intersect x1 x2 x3 x4)
+                     (1d-intersect y1 y2 y3 y4)))
+        (t 'a)))
+
 (defun is-parallel (x1 y1 x2 y2 x3 y3 x4 y4)
-  (= (slope x1 y1 x2 y2) (slope x3 y3 x4 y4)))
+  (eql (slope x1 y1 x2 y2) (slope x3 y3 x4 y4)))
 
 (defun slope (x1 y1 x2 y2)
-  (/ (- y2 y1) (- x2 x1)))
+  (if (= (- x1 x2) 0) 'inf
+    (/ (- y2 y1) (- x2 x1))))
 
-
-;; 1D-intersect
-(defun 1D-intersect (x1 x2 x3 x4)
-  (cond ((no-overlap (x1 x2 x3 x4)) nil)
+(defun 1d-intersect (x1 x2 x3 x4)
+  (cond (((no-overlap x1 x2 x3 x4) nil))
         ((>= (max x3 x4) (max x1 x2))
          (find-overlap x1 x2 x3 x4))
         (t (find-overlap x3 x4 x1 x2))))
 
-(defun is-overlap (x1 x2 x3 x4)
-  (and (< (max x1 x2) (min x3 x4)) (< (max x3 x4) (min x1 x2))))
+(defun no-overlap (x1 x2 x3 x4)
+  (not (and (>= (max x1 x2) (min x3 x4)) (>= (max x3 x4) (min x1 x2)))))
 
 (defun find-overlap (x1 x2 x3 x4)
-  (cond ((= (max x1 x2) (min x3 x4)) (max x3 x4))
+  (cond ((= (max x1 x2) (min x3 x4)) (list(min x3 x4)))
         ((> (min x1 x2) (min x3 x4)) (list (min x1 x2) (max x1 x2)))
-        (t (list (max x1 x2) (min x3 x4)))))
+        (t (list (min x3 x4) (max x1 x2)))))
+
+(defun combine-xy (x y)
+  (values-list (mapcan #'list x y)))
+
+
+
