@@ -69,3 +69,71 @@
        (>= x (min x3 x4)) 
        (<= x (max x1 x2)) 
        (<= x (max x3 x3))))
+       
+       
+       ;;;
+       (defun intersect-segments (x1 y1 x2 y2 x3 y3 x4 y4)
+  (let* ((s1 (slope x1 y1 x2 y2))
+         (s2 (slope x3 y3 x4 y4))
+         (xin1 (x-intercept x1 y1 s1))
+         (xin2 (x-intercept x3 y3 s2)))
+    (cond ((or (null s1) (null s2) (colinear-p xin1 s1 xin2 s2))
+           (parallel-overlap x1 y1 x2 y2 x3 y3 x4 y4))
+          ((eql s1 s2) nil)
+          (t (intersect-line xin1 s1 xin2 s2 x1 x2 x3 x4)))))
+
+(defun slope (x1 y1 x2 y2)
+  (cond ((and (= x1 x2) (= y1 y2)) nil) 
+        ((= x1 x2) 'inf)
+        (t (/ (- y2 y1) (- x2 x1)))))
+;; Slope will be 'inf if vertical and nil if is a point
+
+(defun 1d-intersect (x1 x2 x3 x4)
+  (if (>= (max x3 x4) (max x1 x2))
+      (find-overlap x1 x2 x3 x4)
+    (find-overlap x3 x4 x1 x2)))
+
+(defun colinear-p (x1 s1 x2 s2)
+  (and (eql x1 x2) (eql s1 s2)))
+
+(defun overlap-p (x1 x2 x3 x4)
+  (and (>= (max x1 x2) (min x3 x4)) 
+       (>= (max x3 x4) (min x1 x2))))
+
+(defun find-overlap (x1 x2 x3 x4)
+  (cond ((= (max x1 x2) (min x3 x4)) 
+         (list (max x1 x2) (min x3 x4)))
+        ((> (min x1 x2) (min x3 x4)) (list x1 x2))
+        (t (list (min x3 x4) (max x1 x2)))))
+
+(defun parallel-overlap (x1 y1 x2 y2 x3 y3 x4 y4)
+  (and (overlap-p x1 x2 x3 x4)
+       (values-list 
+        (mapcan #'list 
+                (1d-intersect x1 x2 x3 x4)
+                (1d-intersect y1 y2 y3 y4)))))
+
+(defun x-intercept (x y s)
+  (cond ((eql s 'inf) x)
+        ((= 0 y) x)
+        ((eql s 0) 'nan)
+        ((null s) nil)
+        (t (+ x (/ (- y) s)))))
+;; uses "eql s 0" because s could be inf, nil, or a number
+
+
+(defun intersect-line (xi1 s1 xi2 s2 x1 x2 x3 x4) 
+  (cond ((eql 'inf s1) (values xi1 (+ (* s2 xi1) xi2)))
+        ((eql 'inf s2) (values xi2 (+ (* s1 xi2) xi1)))
+        ((on-line (/ (- xi2 xi1) (- s1 s2)) x1 x2 x3 x4)
+         (values 
+          (/ (- xi2 xi1) (- s1 s2)) 
+          (+ (* s1 (/ (- xi2 xi1) (- s1 s2))) xi1)))
+        (t nil)))
+
+(defun on-line (x x1 x2 x3 x4)
+  (and (>= x (min x1 x2)) 
+       (>= x (min x3 x4)) 
+       (<= x (max x1 x2)) 
+       (<= x (max x3 x3))))
+       
